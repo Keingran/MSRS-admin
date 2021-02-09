@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjj.mapper.SysNoticeMapper">
+
+    <resultMap type="SysPlatformNotice" id="SysPlatformNoticeResult">
+        <id property="noticeId" column="notice_id"/>
+        <result property="noticeTitle" column="notice_title"/>
+        <result property="noticeContent" column="notice_content"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectPlatformList" parameterType="SysPlatformNotice" resultType="com.zjj.dto.SysPlatformNotice">
+        SELECT
+        d.NOTICE_ID as noticeId,
+        d.NOTICE_TITLE as noticeTitle,
+        d.NOTICE_CONTENT as noticeContent,
+        d.STATUS as status,
+        d.CREATE_BY as createBy,
+        d.CREATE_TIME as createTime,
+        d.UPDATE_BY as updateBy,
+        d.UPDATE_TIME as updateTime
+        from sys_platform_notice d
+        <where>
+            d.STATUS = '0'
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectPlatformById" parameterType="Long" resultType="com.zjj.dto.SysPlatformNotice">
+        SELECT
+        d.NOTICE_ID as noticeId,
+        d.NOTICE_TITLE as noticeTitle,
+        d.NOTICE_CONTENT as noticeContent,
+        d.STATUS as status,
+        d.CREATE_BY as createBy,
+        d.CREATE_TIME as createTime,
+        d.UPDATE_BY as updateBy,
+        d.UPDATE_TIME as updateTime
+        from sys_platform_notice d
+        <where>
+            d.STATUS = '0'
+            <if test="noticeId != null and noticeId != 0">
+                AND d.NOTICE_ID = #{noticeId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSuspendList" parameterType="SysSuspendNotice" resultType="com.zjj.dto.SysSuspendNotice">
+        SELECT
+        d.NOTICE_ID as noticeId,
+        d.NOTICE_TITLE as noticeTitle,
+        d.DEPT_ID as deptId,
+        t.DEPT_NAME as deptName,
+        d.VISIT_DATE as visitDate,
+        d.VISIT_PERIOD as visitPeriod,
+        d.DOCTOR_SPECIAL as doctorSpecial,
+        d.DOCTOR_TYPE as doctorType,
+        d.STATUS as status,
+        d.CREATE_BY as createBy,
+        d.CREATE_TIME as createTime,
+        d.UPDATE_BY as updateBy,
+        d.UPDATE_TIME as updateTime
+        from sys_suspend_notice d,sys_dept t
+        <where>
+            d.STATUS = '0' and d.dept_id = t.dept_id
+        </where>
+        ORDER BY createTime DESC
+    </select>
+
+    <select id="selectSuspendById" parameterType="Long" resultType="com.zjj.dto.SysSuspendNotice">
+        SELECT
+        d.NOTICE_ID as noticeId,
+        d.NOTICE_TITLE as noticeTitle,
+        d.DEPT_ID as deptId,
+        t.DEPT_NAME as deptName,
+        d.VISIT_DATE as visitDate,
+        d.VISIT_PERIOD as visitPeriod,
+        d.DOCTOR_SPECIAL as doctorSpecial,
+        d.DOCTOR_TYPE as doctorType,
+        d.STATUS as status,
+        d.CREATE_BY as createBy,
+        d.CREATE_TIME as createTime,
+        d.UPDATE_BY as updateBy,
+        d.UPDATE_TIME as updateTime
+        from sys_suspend_notice d,sys_dept t
+        <where>
+            d.STATUS = '0' and d.dept_id = t.dept_id
+            <if test="noticeId != null and noticeId != 0">
+                AND d.NOTICE_ID = #{noticeId}
+            </if>
+        </where>
+    </select>
+
+</mapper>
