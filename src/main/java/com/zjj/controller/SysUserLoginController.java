@@ -40,8 +40,9 @@ public class SysUserLoginController {
         param.put("phone", decryptPhone);
         param.put("code", decryptCode);
 
-        // 生成 userInfo
-
+        //// 生成 userInfo
+        //String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
+        //        loginBody.getUuid());
         log.info("[SysLoginController --> login] 查询参数：{}", param);
 
         return Result.success(MessageUtils.message("user.login.success"));

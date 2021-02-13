@@ -1,4 +1,4 @@
-package com.zjj.Test;
+package com.zjj.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/help")
-public class HelpWeb {
-    private static final Logger logger = LoggerFactory.getLogger(HelpWeb.class);
+public class SysContentHelpController {
+    private static final Logger logger = LoggerFactory.getLogger(SysContentHelpController.class);
 
     @GetMapping("/common")
     public Result getCommon() {

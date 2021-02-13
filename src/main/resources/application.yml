@@ -48,6 +48,15 @@ pagehelper:
 rsa:
   privateKey: MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAzV7ajGcCIpaYczkA89seVkZzWg17gsGMp7llgINTJqKVzVwDeGmkklHjyT+FEUMueCJ5a4dg3d5xEz1VoYpAzQIDAQABAkBV3yKM8IlhAw0tqJkwXd+6fWzAK8EINHvmqcu6R68eCL/NOL8Hfrm7TBMEY16kp8GyNiAgXtwViyVYWG7TcZHhAiEA5+FKiWFtcO4Y4CR99B+HCYV8N+2/HjhDg1rM/qtEa+kCIQDiu6SyIWT9QuFkbD4TntuiEO287FFEONCgsNO/LHPzRQIhANRhmx19aPn4ejxB8EM65TopUv7++P+61MtozT2srHyRAiAXofVdt8td9o2luP6Tbvh3oQoWqg8ibEWaqjO39nszfQIgBWmfD+ESyhS2s8lkHnOMrMkwluMNRTRzz+Jj0tNQhpo=
 
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 30
+
 # 腾讯云短信服务配置
 qcloudSms:
   # SDK AppID

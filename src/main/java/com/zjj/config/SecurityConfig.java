@@ -1,13 +1,22 @@
 package com.zjj.config;
 
+import com.zjj.security.filter.JwtAuthenticationTokenFilter;
+import com.zjj.security.handle.AuthenticationEntryPointImpl;
+import com.zjj.security.handle.LogoutSuccessHandlerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * spring security配置
@@ -16,17 +25,53 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
+     * 短信验证鉴权
+     */
+    @Autowired
+    private SmsAuthenticationSecurityConfig smsAuthenticationSecurityConfig;
+
+
+    /**
      * 自定义用户认证逻辑
      */
     @Autowired
     private UserDetailsService userDetailsService;
 
     /**
-     * 强散列哈希加密实现
+     * 认证失败处理类
+     */
+    @Autowired
+    private AuthenticationEntryPointImpl unauthorizedHandler;
+
+    /**
+     * 退出处理类
+     */
+    @Autowired
+    private LogoutSuccessHandlerImpl logoutSuccessHandler;
+
+    /**
+     * token认证过滤器
+     */
+    @Autowired
+    private JwtAuthenticationTokenFilter authenticationTokenFilter;
+
+    /**
+     * 跨域过滤器
+     */
+    @Autowired
+    private CorsFilter corsFilter;
+
+    /**
+     * 解决 无法直接注入 AuthenticationManager
+     *
+     * @return
+     * @throws Exception
      */
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception
+    {
+        return super.authenticationManagerBean();
     }
 
     /**
@@ -47,11 +92,45 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .apply(smsAuthenticationSecurityConfig).and()
                 // CSRF禁用，因为不使用session
                 .csrf().disable()
-                .cors()
-                .and().authorizeRequests()
-                .anyRequest().authenticated();
+                .cors().and()
+                // 认证失败处理类
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                // 基于token，所以使用session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                // 过滤请求
+                .authorizeRequests()
+                // 对于登录login, 验证码smsCode, 公告notice, 系统内容content 允许匿名访问
+                .antMatchers("/login", "/smsCode", "/content/**").anonymous()
+                .antMatchers("/help/**", "/info/**", "/dept/**").anonymous()
+                .antMatchers("/user/login").anonymous()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/*.html",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
+                ).permitAll()
+                // 除上面外的所有请求全部需要鉴权认证
+                .anyRequest().authenticated()
+                .and()
+                .headers().frameOptions().disable();
+        httpSecurity.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
+        // 添加JWT filter
+        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        // 添加CORS filter
+        httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
+        httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);
+    }
+
+    /**
+     * 强散列哈希加密实现
+     */
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     /**

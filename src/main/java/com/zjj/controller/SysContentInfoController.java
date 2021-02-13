@@ -1,4 +1,4 @@
-package com.zjj.Test;
+package com.zjj.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zjj.common.Result;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/info")
-public class InfoWeb {
+public class SysContentInfoController {
 
-    private static final Logger logger = LoggerFactory.getLogger(HelpWeb.class);
+    private static final Logger logger = LoggerFactory.getLogger(SysContentHelpController.class);
 
     @GetMapping("/userAgreement")
     public Result getUserAgreement() {
