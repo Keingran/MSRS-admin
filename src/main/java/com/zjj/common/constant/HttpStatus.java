@@ -91,4 +91,11 @@ public class HttpStatus
      * 短信验证码错误
      */
     public static final int SMS_ERROR = 10000;
+
+    /**
+     * 用户登录状态停用
+     */
+    public static final int LOGIN_STATUS = 10001;
+
+
 }

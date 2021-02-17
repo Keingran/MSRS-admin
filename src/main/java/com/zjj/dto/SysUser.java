@@ -24,11 +24,6 @@ public class SysUser implements Serializable {
     private String userName;
 
     /**
-     * 用户名称
-     */
-    private String password;
-
-    /**
      * 手机号码
      */
     private String phone;
@@ -89,14 +84,6 @@ public class SysUser implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPhone() {
@@ -176,7 +163,6 @@ public class SysUser implements Serializable {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("userId", getUserId())
                 .append("userName", getUserName())
-                .append("password", getPassword())
                 .append("phone", getPhone())
                 .append("isAuth", getIsAuth())
                 .append("bindWeChat", getBindWeChat())

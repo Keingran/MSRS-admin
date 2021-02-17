@@ -7,13 +7,14 @@ import com.zjj.redis.RedisCache;
 import com.zjj.service.SendSms;
 import com.zjj.utils.MessageUtils;
 import com.zjj.utils.StringUtils;
-import com.zjj.utils.UUID.IdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -28,34 +29,6 @@ public class SmsController {
     @Autowired
     private RedisCache redisCache;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
-    private static final int SEND_TIME = 5; //过期时间
-
-    /**
-     * 发送短信验证码
-     *
-     * @param phone 手机号
-     * @return 发送结果
-     */
-    @GetMapping("/getCode/{phone}")
-    public String getCode(@PathVariable("phone") String phone) {
-        String code = redisTemplate.opsForValue().get(phone);
-        if (StringUtils.isNotEmpty(code)) {
-            return "验证码未过期！";
-        }
-        // 生成6位数的验证码并存储到redis中
-        code = String.valueOf(Math.round((Math.random() + new Random().nextInt(9) + 1) * 100000));
-        String[] param = {code, Integer.toString(SEND_TIME)};
-        boolean isSend = sendSms.send(phone, param);
-        if (isSend) {
-            redisTemplate.opsForValue().set(phone, code, SEND_TIME, TimeUnit.MINUTES);
-            return "验证码发送成功!";
-        } else {
-            return "验证码发送失败!";
-        }
-    }
 
     /**
      * 发送短信验证码
@@ -66,27 +39,24 @@ public class SmsController {
      */
     @GetMapping("/smsCode")
     public Result getSmsCode(@RequestParam("phone") String phone, @RequestParam("smsType") String smsType) {
-        // 首先判断redis中是否有当前手机号的记录，没有则说明可以发送短信
-        String code = redisCache.getCacheObject(phone);
+        // Redis手机号短信验证码标识
+        String smsKey = Constants.SMS_CODE_KEY + phone;
+        // 首先根据手机号 smsKey 判断redis中是否有当前手机号的记录，没有则说明可以发送短信
+        String code = redisCache.getCacheObject(smsKey);
         if (StringUtils.isNotEmpty(code)) {
-            Long expireTime = redisCache.getExpire(phone);
+            Long expireTime = redisCache.getExpire(smsKey);
             return Result.error(HttpStatus.SMS_ERROR, MessageUtils.message("user.sms.expire.time", expireTime));
         }
-        String uuid = IdUtils.simpleUUID();
-        String smsKey = Constants.SMS_CODE_KEY + uuid;
-        redisCache.deleteObject(smsKey);
-
-        log.info("短信参数为:{}", phone + "—" + smsType);
+        log.info("[SmsController --> getSmsCode] 短信参数: {}", phone + "_" + smsType);
         code = String.valueOf(Math.round((Math.random() + new Random().nextInt(9) + 1) * 100000));
-        String[] param = {code, Integer.toString(SEND_TIME)};
+        String[] param = {code, Integer.toString(Constants.SMS_EXPIRATION)};
+        // 发送验证码
         //boolean isSend = sendSms.send(phone, param);
 
         if (true) {
-            // 设置发送短信的期限 1min
-            redisCache.setCacheObject(phone, code, 1, TimeUnit.MINUTES);
-            // 设置短信验证码的期限 1min
+            // 设置发送短信的期限 1min发送1次
             redisCache.setCacheObject(smsKey, code, Constants.SMS_EXPIRATION, TimeUnit.MINUTES);
-            Long expireTime = redisCache.getExpire(phone);
+            Long expireTime = redisCache.getExpire(smsKey);
             return Result.success(MessageUtils.message("user.send.sms.success"), expireTime);
         } else {
             return Result.error(HttpStatus.SMS_ERROR, MessageUtils.message("user.send.sms.error"));

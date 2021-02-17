@@ -1,22 +1,88 @@
 package com.zjj.utils.http;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.zjj.common.constant.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.X509Certificate;
+import java.util.Map;
 
 /**
  * 通用http发送方法
  */
 public class HttpUtils {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+
+
+    /**
+     * 获取 HttpServletRequest 中的request playLoad的参数
+     *
+     * @param request HttpServletRequest
+     * @return request playLoad的参数
+     */
+    public static JSONObject getRequestPlayLoad(HttpServletRequest request) throws IOException {
+        BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), Constants.UTF8));
+        StringBuilder sb = new StringBuilder();
+        String inputStr;
+        while ((inputStr = streamReader.readLine()) != null) {
+            sb.append(inputStr);
+        }
+        JSONObject jsonObject = JSONObject.parseObject(sb.toString());
+        return jsonObject;
+    }
+
+    public static String getStringFromStream(HttpServletRequest request) {
+        ServletInputStream is;
+        try {
+            is = request.getInputStream();
+            int nRead = 1;
+            int nTotalRead = 0;
+            byte[] bytes = new byte[10240];
+            while (nRead > 0) {
+                nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);
+                if (nRead > 0)
+                    nTotalRead = nTotalRead + nRead;
+            }
+            String str = new String(bytes, 0, nTotalRead, "utf-8");
+            return str;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static Map getMap(HttpServletRequest request) {
+        Map mapJson = null;
+        try {
+            //getInputStream只会转化request body中数据为输入流
+            InputStreamReader is = new InputStreamReader(request.getInputStream());
+            BufferedReader reader = new BufferedReader(is);
+            String str = "";
+            String wholeStr = "";
+            //一行一行的读取body体里面的内容；
+            while ((str = reader.readLine()) != null) {
+                wholeStr += str;
+            }
+
+            //接收的参数通过fastjson转化为map
+            mapJson = JSON.parseObject(wholeStr);
+            //关闭流
+            is.close();
+        } catch (Exception e) {
+        }
+        return mapJson;
+    }
+
 
     /**
      * 向指定 URL 发送GET方法的请求

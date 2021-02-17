@@ -67,7 +67,7 @@ public class Constants {
     /**
      * 验证码有效期（分钟）
      */
-    public static final Integer SMS_EXPIRATION = 2;
+    public static final Integer SMS_EXPIRATION = 1;
 
     /**
      * 令牌

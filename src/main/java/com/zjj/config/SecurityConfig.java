@@ -95,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(smsAuthenticationSecurityConfig).and()
                 // CSRF禁用，因为不使用session
                 .csrf().disable()
-                .cors().and()
+                //.cors().and()
                 // 认证失败处理类
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // 基于token，所以使用session
@@ -105,7 +105,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 对于登录login, 验证码smsCode, 公告notice, 系统内容content 允许匿名访问
                 .antMatchers("/login", "/smsCode", "/content/**").anonymous()
                 .antMatchers("/help/**", "/info/**", "/dept/**").anonymous()
-                .antMatchers("/user/login").anonymous()
+                .antMatchers("/user/**","/test/**").anonymous()
                 .antMatchers(
                         HttpMethod.GET,
                         "/*.html",

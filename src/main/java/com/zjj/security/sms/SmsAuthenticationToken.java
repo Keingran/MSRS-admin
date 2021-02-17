@@ -1,4 +1,4 @@
-package com.zjj.security;
+package com.zjj.security.sms;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 /**
- * 短信验证码登录 AuthenticationToken
+ * 短信验证码登录认证 AuthenticationToken
  * 仿照 UsernamePasswordAuthenticationToken 实现
  */
 public class SmsAuthenticationToken extends AbstractAuthenticationToken {
@@ -20,16 +20,16 @@ public class SmsAuthenticationToken extends AbstractAuthenticationToken {
     private final Object principal;
 
     /**
-     * 构建一个没有鉴权的 SmsAuthenticationToken
+     * 构建一个没有鉴权的 AuthenticationToken
      */
-    public SmsAuthenticationToken(String phone) {
+    public SmsAuthenticationToken(Object principal) {
         super(null);
-        this.principal = phone;
+        this.principal = principal;
         this.setAuthenticated(false);
     }
 
     /**
-     * 构建拥有鉴权的 SmsCodeAuthenticationToken
+     * 构建一个拥有鉴权的 AuthenticationToken
      */
     public SmsAuthenticationToken(Object principal, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);

@@ -1,6 +1,7 @@
 package com.zjj.web;
 
 import com.zjj.common.constant.Constants;
+import com.zjj.dto.SysUser;
 import com.zjj.dto.model.LoginUser;
 import com.zjj.redis.RedisCache;
 import com.zjj.utils.ServletUtils;
@@ -23,8 +24,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * token验证处理
- *
- * @author ruoyi
  */
 @Component
 public class TokenService {
@@ -98,7 +97,6 @@ public class TokenService {
         loginUser.setToken(token);
         setUserAgent(loginUser);
         refreshToken(loginUser);
-
         Map<String, Object> claims = new HashMap<>();
         claims.put(Constants.LOGIN_USER_KEY, token);
         return createToken(claims);
@@ -185,7 +183,6 @@ public class TokenService {
     /**
      * 获取请求token
      *
-     * @param request
      * @return token
      */
     private String getToken(HttpServletRequest request) {

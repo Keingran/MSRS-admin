@@ -12,6 +12,7 @@ import java.util.Set;
  * 登录用户身份权限
  */
 public class LoginUser implements UserDetails {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -78,7 +79,8 @@ public class LoginUser implements UserDetails {
     @JsonIgnore
     @Override
     public String getPassword() {
-        return user.getPassword();
+        //return user.getPassword();
+        return null;
     }
 
     @Override
