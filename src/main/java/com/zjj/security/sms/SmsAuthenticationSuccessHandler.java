@@ -12,6 +12,7 @@ import com.zjj.enums.UserStatus;
 import com.zjj.exception.BaseException;
 import com.zjj.manager.AsyncManager;
 import com.zjj.manager.factory.AsyncFactory;
+import com.zjj.redis.RedisCache;
 import com.zjj.service.ISysUserService;
 import com.zjj.service.impl.SysUserServiceImpl;
 import com.zjj.utils.MessageUtils;
@@ -47,12 +48,16 @@ public class SmsAuthenticationSuccessHandler implements AuthenticationSuccessHan
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private RedisCache redisCache;
+
     private static final Logger log = LoggerFactory.getLogger(SmsAuthenticationSuccessHandler.class);
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SysUser sysUser = (SysUser) authentication.getPrincipal();
         String phone = sysUser.getPhone();
+        String smsKey = Constants.SMS_CODE_KEY;
         // 根据phone查询数据库，是否有这个用户
         SysUser user = userService.selectUserByPhone(phone);
         if (StringUtils.isNotNull(user)) {
@@ -75,6 +80,7 @@ public class SmsAuthenticationSuccessHandler implements AuthenticationSuccessHan
                 ServletUtils.renderString(response, JSON.toJSONString(result));
 
                 log.info("{} 登录成功", phone);
+                redisCache.deleteObject(smsKey);
                 AsyncManager.me().execute(AsyncFactory.recordLoginLog(phone, Constants.LOGIN_SUCCESS, msg));
             }
         } else {
@@ -90,6 +96,7 @@ public class SmsAuthenticationSuccessHandler implements AuthenticationSuccessHan
             ServletUtils.renderString(response, JSON.toJSONString(result));
 
             log.info("{} 登录成功，创建新用户：{}", phone, phone);
+            redisCache.deleteObject(smsKey);
             AsyncManager.me().execute(AsyncFactory.recordLoginLog(phone, Constants.LOGIN_SUCCESS, msg));
 
         }
@@ -110,7 +117,7 @@ public class SmsAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
     public UserDetails createLoginUser(SysUser user) {
         Set<String> perms = new HashSet<>();
-        perms.add("*:*:*");
+        perms.add("admin");
         return new LoginUser(user, perms);
     }
 

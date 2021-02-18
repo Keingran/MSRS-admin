@@ -20,7 +20,6 @@ import java.util.Map;
 /**
  * 公告信息
  */
-
 @RestController
 @RequestMapping("/notice")
 public class SysNoticeController {

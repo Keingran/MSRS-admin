@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjj.mapper.SysContentMapper">
+    <resultMap type="SysContent" id="SysContentResult">
+        <id property="contentId" column="content_id"/>
+        <result property="contentType" column="content_type"/>
+        <result property="contentTag" column="content_tag"/>
+        <result property="status" column="status"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="selectContent" parameterType="SysContent" resultMap="SysContentResult">
+        SELECT
+        content_id,
+        content_type,
+        content_tag,
+        status,
+        content,
+        create_time
+        from sys_content
+        <where>
+            status = '0'
+            <if test="contentType != null and contentType != ''">
+                AND content_type = #{contentType}
+            </if>
+            <if test="contentTag != null and contentTag != ''">
+            AND content_tag = #{contentTag}
+            </if>
+        </where>
+    </select>
+</mapper>
