@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zjj.mapper.SysMenuMapper">
+<mapper namespace="com.zjj.mapper.SysConfigMapper">
     <resultMap type="SysMenu" id="SysMenuResult">
         <id property="menuId" column="menu_id"/>
         <result property="menuName" column="menu_name"/>
@@ -37,7 +37,8 @@
         status,
         ifnull(perms,'') as perms,
         icon,
-        create_time
+        create_time,
+        remark
 		from sys_menu
         WHERE status = '0'
         order by parent_id, order_num

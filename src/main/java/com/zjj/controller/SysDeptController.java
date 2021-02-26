@@ -7,10 +7,7 @@ import com.zjj.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -51,23 +48,21 @@ public class SysDeptController {
         return Result.success(deptTree);
     }
 
-    @GetMapping("/getById/{id}")
-    public SysDept getById(@PathVariable("id") String id) {
-        String deptName = stringRedisTemplate.opsForValue().get("deptName_" + id);
-        System.out.println("sysDept" + deptName);
+    @GetMapping("/getById")
+    public Result getById(@RequestParam("deptId") String deptId) {
+        String deptName = stringRedisTemplate.opsForValue().get("deptName_" + deptId);
         SysDept sysDept = null;
         if (deptName == null) {
-            sysDept = deptService.getById(id);
+            sysDept = deptService.getById(deptId);
             deptName = sysDept.getDeptName();
-            stringRedisTemplate.opsForValue().set("deptName_" + id, deptName);
+            stringRedisTemplate.opsForValue().set("deptName_" + deptId, deptName);
         }
-        sysDept = (SysDept) redisTemplate.opsForValue().get("dept_" + id);
-        System.out.println("sysDept" + sysDept);
+        sysDept = (SysDept) redisTemplate.opsForValue().get("dept_" + deptId);
         if (sysDept == null) {
-            sysDept = deptService.getById(id);
-            redisTemplate.opsForValue().set("dept_" + id, sysDept);
+            sysDept = deptService.getById(deptId);
+            redisTemplate.opsForValue().set("dept_" + deptId, sysDept);
         }
-        return sysDept;
+        return Result.success(sysDept);
     }
 
 }

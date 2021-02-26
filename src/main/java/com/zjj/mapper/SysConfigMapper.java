@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 系统信息 数据层
  */
-public interface SysMenuMapper {
+public interface SysConfigMapper {
     /**
      * 查询系统菜单
      *

@@ -49,7 +49,7 @@ public class SysNoticeController {
     /**
      * 根据部门编号获取详细信息
      */
-    @GetMapping(value = "/platFormList/{noticeId}")
+    @GetMapping("/platFormList/{noticeId}")
     public Result getPlatformById(@PathVariable Long noticeId) {
         log.info("[SysNoticeController --> getPlatformById] 查询参数：{}", noticeId);
         return Result.success(noticeService.getPlatformById(noticeId));

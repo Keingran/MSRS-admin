@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * 系统公告信息 服务层处理
+ */
 @Service
 public class SysNoticeServiceImpl implements ISysNoticeService {
 

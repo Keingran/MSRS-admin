@@ -45,7 +45,7 @@
         from sys_platform_notice d
         <where>
             d.STATUS = '0'
-            <if test="noticeId != null and noticeId != 0">
+            <if test="noticeId != null and noticeId != ''">
                 AND d.NOTICE_ID = #{noticeId}
             </if>
         </where>
@@ -91,7 +91,7 @@
         from sys_suspend_notice d,sys_dept t
         <where>
             d.STATUS = '0' and d.dept_id = t.dept_id
-            <if test="noticeId != null and noticeId != 0">
+            <if test="noticeId != null and noticeId != ''">
                 AND d.NOTICE_ID = #{noticeId}
             </if>
         </where>

@@ -128,7 +128,7 @@ public class TokenService {
         String userKey = getTokenKey(loginUser.getToken());
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
-
+ 
     /**
      * 设置用户代理信息
      *

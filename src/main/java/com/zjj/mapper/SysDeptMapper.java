@@ -4,6 +4,9 @@ import com.zjj.dto.SysDept;
 
 import java.util.List;
 
+/**
+ * 部门信息 数据层
+ */
 public interface SysDeptMapper {
     /**
      * 查询部门管理数据

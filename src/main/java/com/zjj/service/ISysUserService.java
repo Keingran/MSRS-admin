@@ -1,6 +1,7 @@
 package com.zjj.service;
 
 import com.zjj.dto.SysUser;
+import com.zjj.dto.SysUserAuth;
 
 import java.util.List;
 
@@ -26,7 +27,6 @@ public interface ISysUserService {
     public SysUser selectUserByPhone(String phone);
 
 
-
     /**
      * 新增用户信息
      *
@@ -43,4 +43,11 @@ public interface ISysUserService {
      */
     public int updateUser(SysUser user);
 
+    /**
+     * 查询用户认证信息
+     *
+     * @param userId 用户id
+     * @return 认证信息
+     */
+    SysUserAuth getUserAuth(Long userId);
 }

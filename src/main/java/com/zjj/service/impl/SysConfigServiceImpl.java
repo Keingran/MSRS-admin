@@ -1,8 +1,8 @@
 package com.zjj.service.impl;
 
 import com.zjj.dto.SysMenu;
-import com.zjj.mapper.SysMenuMapper;
-import com.zjj.service.ISysHospitalService;
+import com.zjj.mapper.SysConfigMapper;
+import com.zjj.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +11,10 @@ import java.util.List;
  * 系统信息 服务层处理
  */
 @Service
-public class SysHospitalServiceImpl implements ISysHospitalService {
+public class SysConfigServiceImpl implements ISysConfigService {
 
     @Autowired
-    private SysMenuMapper menuMapper;
+    private SysConfigMapper menuMapper;
 
     /**
      * 查询系统菜单

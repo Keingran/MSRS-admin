@@ -13,26 +13,26 @@ public class RSATest {
     private static final String SRC = "123456";
 
     public static void main(String[] args) throws Exception {
-        System.out.println("\n");
-        RSATest.RsaKeyPair keyPair = generateKeyPair();
-        System.out.println("公钥：" + keyPair.getPublicKey());
-        System.out.println("私钥：" + keyPair.getPrivateKey());
-        System.out.println("\n");
-        test1(keyPair);
-        System.out.println("\n");
-        test2(keyPair);
-        System.out.println("\n");
+        //System.out.println("\n");
+        //RSATest.RsaKeyPair keyPair = generateKeyPair();
+        //System.out.println("公钥：" + keyPair.getPublicKey());
+        //System.out.println("私钥：" + keyPair.getPrivateKey());
+        //System.out.println("\n");
+        //test1(keyPair);
+        //System.out.println("\n");
+        //test2(keyPair);
+        //System.out.println("\n");
         //
-        //String privateKeyText =   "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAzV7ajGcCIpaYczkA\n" +
-        //        "89seVkZzWg17gsGMp7llgINTJqKVzVwDeGmkklHjyT+FEUMueCJ5a4dg3d5xEz1V\n" +
-        //        "oYpAzQIDAQABAkBV3yKM8IlhAw0tqJkwXd+6fWzAK8EINHvmqcu6R68eCL/NOL8H\n" +
-        //        "frm7TBMEY16kp8GyNiAgXtwViyVYWG7TcZHhAiEA5+FKiWFtcO4Y4CR99B+HCYV8\n" +
-        //        "N+2/HjhDg1rM/qtEa+kCIQDiu6SyIWT9QuFkbD4TntuiEO287FFEONCgsNO/LHPz\n" +
-        //        "RQIhANRhmx19aPn4ejxB8EM65TopUv7++P+61MtozT2srHyRAiAXofVdt8td9o2l\n" +
-        //        "uP6Tbvh3oQoWqg8ibEWaqjO39nszfQIgBWmfD+ESyhS2s8lkHnOMrMkwluMNRTRz\n" +
-        //        "z+Jj0tNQhpo=";
-        //String text = "xUFqBmYnmpRqHs4bzcIucRyJG5ZNUt4FcKnpabQTyImC+r2jeMOZzmJo4tNqQCpE5XzTlQUSvM0O9Aq1Vg9kkw==";
-        //System.out.println(decryptByPrivateKey(privateKeyText,text));
+        String privateKeyText =   "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAzV7ajGcCIpaYczkA\n" +
+                "89seVkZzWg17gsGMp7llgINTJqKVzVwDeGmkklHjyT+FEUMueCJ5a4dg3d5xEz1V\n" +
+                "oYpAzQIDAQABAkBV3yKM8IlhAw0tqJkwXd+6fWzAK8EINHvmqcu6R68eCL/NOL8H\n" +
+                "frm7TBMEY16kp8GyNiAgXtwViyVYWG7TcZHhAiEA5+FKiWFtcO4Y4CR99B+HCYV8\n" +
+                "N+2/HjhDg1rM/qtEa+kCIQDiu6SyIWT9QuFkbD4TntuiEO287FFEONCgsNO/LHPz\n" +
+                "RQIhANRhmx19aPn4ejxB8EM65TopUv7++P+61MtozT2srHyRAiAXofVdt8td9o2l\n" +
+                "uP6Tbvh3oQoWqg8ibEWaqjO39nszfQIgBWmfD+ESyhS2s8lkHnOMrMkwluMNRTRz\n" +
+                "z+Jj0tNQhpo=";
+        String text = "vzZMp+P/bV3nv3ozyTlQwWbHxDnXIm7Pn+TaG1dHT9UjD1OH0erC9ODa7LcAAqTtS7K9o/4Qn1AfhU//9wxEHw==";
+        System.out.println(RsaUtils.decryptByPrivateKey(privateKeyText,text));
     }
 
     /**

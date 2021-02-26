@@ -17,6 +17,17 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <resultMap type="SysUserAuth" id="SysUserAuthResult">
+        <result property="idCardNo" column="idCardNo"/>
+        <result property="idCardType" column="idCardType"/>
+        <result property="idCardTypeView" column="idCardTypeView"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
     <select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
         SELECT
         u.user_id,
@@ -94,4 +105,18 @@
         </set>
         where user_id = #{userId}
     </update>
+
+    <select id="getUserAuth" parameterType="Long" resultMap="SysUserAuthResult">
+        select
+        idCardNo,
+        idCardType,
+        idCardTypeView,
+        user_name
+        from sys_user_auth
+        <where>
+            <if test="userId != null and userId != ''">
+                user_id = ${userId}
+            </if>
+        </where>
+    </select>
 </mapper>

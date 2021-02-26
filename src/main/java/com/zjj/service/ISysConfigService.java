@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 系统信息 服务层
  */
-public interface ISysHospitalService {
+public interface ISysConfigService {
     /**
      * 查询系统菜单
      *

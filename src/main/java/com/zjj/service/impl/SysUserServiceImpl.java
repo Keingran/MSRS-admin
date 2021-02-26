@@ -1,12 +1,17 @@
 package com.zjj.service.impl;
 
 import com.zjj.dto.SysUser;
+import com.zjj.dto.SysUserAuth;
 import com.zjj.mapper.SysUserMapper;
 import com.zjj.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+/**
+ * 用户信息 服务层处理
+ */
 @Service
 public class SysUserServiceImpl implements ISysUserService {
 
@@ -57,5 +62,16 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public int updateUser(SysUser user) {
         return userMapper.updateUser(user);
+    }
+
+    /**
+     * 查询用户认证信息
+     *
+     * @param userId 用户id
+     * @return 认证信息
+     */
+    @Override
+    public SysUserAuth getUserAuth(Long userId) {
+        return userMapper.getUserAuth(userId);
     }
 }

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjj.mapper.SysProductMapper">
+    <resultMap type="SysProductBatch" id="SysProductBatchResult">
+        <id property="batchId" column="batch_id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="batchDate" column="batch_date"/>
+        <result property="weekDesc" column="week_desc"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="SysProductInfo" id="SysProductInfoResult">
+        <id property="uniqProductKey" column="uniqProductKey"/>
+        <result property="batchId" column="batch_id"/>
+        <result property="batchDate" column="batch_date"/>
+        <result property="weekDesc" column="week_desc"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="title" column="title"/>
+        <result property="doctId" column="doct_id"/>
+        <result property="doctName" column="name"/>
+        <result property="doctType" column="doct_type"/>
+        <result property="doctSkill" column="content"/>
+        <result property="fCode" column="fCode"/>
+        <result property="nCode" column="nCode"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="getProductList" resultMap="SysProductBatchResult">
+        select
+        status ,
+        week_desc ,
+        batch_date
+        from sys_product_batch
+        <where>
+            <if test="deptId != null and deptId != ''">
+                AND dept_id = #{deptId}
+            </if>
+            <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+                AND batch_date between #{beginTime} and #{endTime}
+            </if>
+        </where>
+        order by batch_date
+    </select>
+
+
+    <select id="getProductDetail" resultMap="SysProductInfoResult">
+        select
+        spi.uniqProductKey ,
+        sd.name ,
+        sd.doct_type ,
+        spi.title ,
+        sd.content ,
+        spi.fcode ,
+        spi.ncode
+        from sys_product_info spi
+        left join sys_doctor sd on spi.doct_id = sd.doct_id
+        left join sys_product_batch spb on spi.batch_id = spb.batch_id
+        <where>
+            spi.doct_id = sd.doct_id and spi.batch_id = spb.batch_id
+            <if test="deptId != null and deptId != ''">
+                AND spb.dept_id = #{deptId}
+            </if>
+            <if test="batchDate != null and batchDate != ''">
+                AND spb.batch_date = #{batchDate}
+            </if>
+            <if test="status != null and status != ''">
+                AND spi.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="productConfirm" resultMap="SysProductInfoResult">
+        select
+        spi.uniqProductKey ,
+        spt.dept_name ,
+        sd.name ,
+        sd.doct_type ,
+        spi.title ,
+        sd.content ,
+        spb.batch_date ,
+        spb.week_desc ,
+        spi.status ,
+        spi.fcode
+        from sys_product_info spi
+        left join sys_doctor sd on spi.doct_id = sd.doct_id
+        left join sys_product_batch spb on spi.batch_id = spb.batch_id
+        left join sys_dept spt on spb.dept_id = spt.dept_id
+        <where>
+            spi.doct_id = sd.doct_id and spi.batch_id = spb.batch_id and spb.dept_id = spt.dept_id
+            <if test="deptId != null and deptId != ''">
+                AND spb.dept_id = #{deptId}
+            </if>
+            <if test="batchDate != null and batchDate != ''">
+                AND spb.batch_date = #{batchDate}
+            </if>
+            <if test="uniqProductKey != null and uniqProductKey != ''">
+                AND spi.uniqProductKey = #{uniqProductKey}
+            </if>
+        </where>
+    </select>
+</mapper>

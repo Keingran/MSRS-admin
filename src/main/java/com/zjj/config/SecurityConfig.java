@@ -69,8 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception
-    {
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
@@ -103,9 +102,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login, 验证码smsCode, 公告notice, 系统内容content 允许匿名访问
-                .antMatchers("/login", "/smsCode", "/content/**").permitAll()
-                .antMatchers("/hospital/**", "/dept/**", "/notice/**").permitAll()
-                .antMatchers("/user/**","/test/**").permitAll()
+                .antMatchers("/login", "/smsCode").permitAll()
+                .antMatchers("/system/**", "/content/**", "/dept/**", "/notice/**").permitAll()
+                .antMatchers("/user/**", "/test/**").permitAll()
+                //.antMatchers("/product/**","/patient/**").permitAll()
                 .antMatchers(
                         HttpMethod.GET,
                         "/*.html",

@@ -6,6 +6,9 @@ import com.zjj.dto.SysSuspendNotice;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 公告信息 数据层
+ */
 public interface SysNoticeMapper {
     /**
      * 查询平台公告列表

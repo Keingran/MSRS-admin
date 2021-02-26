@@ -57,7 +57,7 @@ public class SmsAuthenticationSuccessHandler implements AuthenticationSuccessHan
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SysUser sysUser = (SysUser) authentication.getPrincipal();
         String phone = sysUser.getPhone();
-        String smsKey = Constants.SMS_CODE_KEY;
+        String smsKey = Constants.SMS_CODE_KEY + phone;
         // 根据phone查询数据库，是否有这个用户
         SysUser user = userService.selectUserByPhone(phone);
         if (StringUtils.isNotNull(user)) {

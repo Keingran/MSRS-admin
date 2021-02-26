@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjj.mapper.SysPatientMapper">
+    <resultMap type="SysPatient" id="SysPatientListResult">
+        <id property="patientId" column="patient_id"/>
+        <result property="patientName" column="patient_name"/>
+        <result property="phone" column="phone"/>
+        <result property="idCardNo" column="idCardNo"/>
+        <result property="idCardType" column="idCardType"/>
+        <result property="idCardTypeView" column="idCardTypeView"/>
+        <result property="sex" column="sex"/>
+        <result property="birthDate" column="birthDate"/>
+        <result property="address" column="address"/>
+        <result property="userId" column="user_id"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="getPatientList" parameterType="Long" resultMap="SysPatientListResult">
+        select
+        patient_id,
+        patient_name,
+        phone,
+        idCardNo,
+        idCardType,
+        idCardTypeView,
+        sex,
+        birthDate,
+        address
+        from sys_patient
+        <where>
+            is_delete = '0'
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+        </where>
+    </select>
+</mapper>

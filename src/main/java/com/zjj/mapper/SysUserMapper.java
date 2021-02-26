@@ -2,6 +2,7 @@ package com.zjj.mapper;
 
 
 import com.zjj.dto.SysUser;
+import com.zjj.dto.SysUserAuth;
 
 /**
  * 用户表 数据层
@@ -26,7 +27,6 @@ public interface SysUserMapper {
     public SysUser selectUserByPhone(String phone);
 
 
-
     /**
      * 新增用户信息
      *
@@ -42,4 +42,12 @@ public interface SysUserMapper {
      * @return 结果
      */
     public int updateUser(SysUser user);
+
+    /**
+     * 查询用户认证信息
+     *
+     * @param userId 用户id
+     * @return 认证信息
+     */
+    SysUserAuth getUserAuth(Long userId);
 }
