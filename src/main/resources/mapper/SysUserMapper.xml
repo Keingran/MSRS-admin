@@ -119,4 +119,33 @@
             </if>
         </where>
     </select>
+
+    <insert id="insertUserAuth" parameterType="com.zjj.dto.SysUserAuth">
+        insert into sys_user_auth
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            idCardNo,
+            idCardType,
+            idCardTypeView,
+            user_id,
+            user_name,
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{idCardNo},
+            #{idCardType},
+            #{idCardTypeView},
+            #{userId},
+            #{userName},
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateUserAuth">
+        update sys_user
+        set
+        is_auth = '1',
+        user_name = #{username},
+        update_time = sysdate()
+        where user_id = #{userId}
+    </update>
 </mapper>

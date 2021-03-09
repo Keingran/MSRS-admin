@@ -74,4 +74,28 @@ public class SysUserServiceImpl implements ISysUserService {
     public SysUserAuth getUserAuth(Long userId) {
         return userMapper.getUserAuth(userId);
     }
+
+    /**
+     * 新增用户实名认证
+     *
+     * @param userAuth 实名认证信息
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int insertUserAuth(SysUserAuth userAuth) {
+        return userMapper.insertUserAuth(userAuth);
+    }
+
+    /**
+     * 用户认证
+     *
+     * @param userId   用户id
+     * @param username 用户名称
+     * @return 结果
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updateUserAuth(Long userId, String username) {
+        return userMapper.updateUserAuth(userId, username);
+    }
 }

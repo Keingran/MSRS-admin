@@ -40,4 +40,42 @@ public interface SysProductMapper {
      * @return 号源信息
      */
     SysProductInfo productConfirm(@Param("deptId") String deptId, @Param("batchDate") String batchDate, @Param("uniqProductKey") String uniqProductKey);
+
+    /**
+     * 查询号源是否存在
+     *
+     * @param uniqProductKey 号源id
+     * @return 结果
+     */
+    int selectOrderNCodeById(String uniqProductKey);
+
+    /**
+     * 修改号源数量 -1
+     *
+     * @param uniqProductKey 号源id
+     */
+    int updateProductNCode(@Param("uniqProductKey") String uniqProductKey, @Param("version") int version);
+
+    /**
+     * 查询版本号
+     *
+     * @param uniqProductKey 号源id
+     * @return 结果
+     */
+    int getVersionById(String uniqProductKey);
+
+    /**
+     * 修改号源数量 +1
+     *
+     * @param uniqProductKey 号源id
+     */
+    int updateProductNCodeAdd(@Param("uniqProductKey") String uniqProductKey, @Param("version") int version);
+
+    List<SysProductInfo> getProductData(SysProductInfo sysProductInfo);
+
+    int insertProductBatch(SysProductInfo sysProductInfo);
+
+    SysProductInfo checkProductDate(String batchDate);
+
+    void insertProductInfo(SysProductInfo sysProductInfo);
 }

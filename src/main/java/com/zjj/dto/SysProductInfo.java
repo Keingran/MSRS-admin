@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 号源信息表 sys_product_info
@@ -37,6 +38,11 @@ public class SysProductInfo implements Serializable {
     /**
      * 部门名称A
      */
+    private Long deptId;
+
+    /**
+     * 部门名称A
+     */
     private String deptName;
 
     /**
@@ -57,7 +63,7 @@ public class SysProductInfo implements Serializable {
     /**
      * 医生职称A
      */
-    private String doctType;
+    private String postName;
 
     /**
      * 医生简介 / 特长A
@@ -78,6 +84,22 @@ public class SysProductInfo implements Serializable {
      * 时间段 0上午 1下午
      */
     private String status;
+
+    /**
+     * 请求参数
+     */
+    private Map<String, Object> params;
+
+    /**
+     * 分页参数
+     */
+    private int page;
+    private int size;
+
+    /**
+     * 版本号
+     */
+    private int version;
 
     /**
      * 创建日期
@@ -155,12 +177,12 @@ public class SysProductInfo implements Serializable {
         this.doctName = doctName;
     }
 
-    public String getDoctType() {
-        return doctType;
+    public String getPostName() {
+        return postName;
     }
 
-    public void setDoctType(String doctType) {
-        this.doctType = doctType;
+    public void setPostName(String postName) {
+        this.postName = postName;
     }
 
     public String getDoctSkill() {
@@ -195,6 +217,14 @@ public class SysProductInfo implements Serializable {
         this.status = status;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -211,6 +241,38 @@ public class SysProductInfo implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public Map<String, Object> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -222,11 +284,12 @@ public class SysProductInfo implements Serializable {
                 .append("title", getTitle())
                 .append("doctId", getDoctId())
                 .append("doctName", getDoctName())
-                .append("doctType", getDoctType())
+                .append("postName", getPostName())
                 .append("doctSkill", getDoctSkill())
                 .append("fCode", getfCode())
                 .append("nCode", getnCode())
                 .append("status", getStatus())
+                .append("version", getVersion())
                 .append("createTime", getCreateTime())
                 .append("updateTime", getUpdateTime())
                 .toString();

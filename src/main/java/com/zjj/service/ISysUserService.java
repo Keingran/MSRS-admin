@@ -50,4 +50,20 @@ public interface ISysUserService {
      * @return 认证信息
      */
     SysUserAuth getUserAuth(Long userId);
+
+    /**
+     * 新增用户实名认证
+     *
+     * @param userAuth 实名认证信息
+     */
+    int insertUserAuth(SysUserAuth userAuth);
+
+    /**
+     * 用户认证
+     *
+     * @param userId 用户id
+     * @param username 用户名称
+     * @return 结果
+     */
+    int updateUserAuth(Long userId, String username);
 }

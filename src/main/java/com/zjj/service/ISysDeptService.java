@@ -1,5 +1,6 @@
 package com.zjj.service;
 
+import com.zjj.common.Result;
 import com.zjj.dto.SysDept;
 import com.zjj.dto.TreeList;
 import org.springframework.cache.annotation.Cacheable;
@@ -35,4 +36,62 @@ public interface ISysDeptService {
     public List<TreeList> buildDeptTreeList(List<SysDept> depts);
 
     SysDept getById(String id);
+
+    /**
+     * 查询所有部门列表
+     */
+    List<SysDept> selectDeptAll(SysDept dept);
+
+    /**
+     * 根据id查询所有部门信息
+     */
+    SysDept selectDeptAllById(Long deptId);
+
+    /**
+     * 校验部门名称是否唯一
+     *
+     * @param dept 部门信息
+     * @return 结果
+     */
+    public String checkDeptNameUnique(SysDept dept);
+
+    /**
+     * 新增保存部门信息
+     *
+     * @param dept 部门信息
+     * @return 结果
+     */
+    public int insertDept(SysDept dept);
+
+    /**
+     * 修改保存部门信息
+     *
+     * @param dept 部门信息
+     * @return 结果
+     */
+    public int updateDept(SysDept dept);
+
+    /**
+     * 是否存在部门子节点
+     *
+     * @param deptId 部门ID
+     * @return 结果
+     */
+    public boolean hasChildByDeptId(Long deptId);
+
+    /**
+     * 查询部门是否存在用户
+     *
+     * @param deptId 部门ID
+     * @return 结果 true 存在 false 不存在
+     */
+    public boolean checkDeptExistUser(Long deptId);
+
+    /**
+     * 删除部门管理信息
+     *
+     * @param deptId 部门ID
+     * @return 结果
+     */
+    public int deleteDeptById(Long deptId);
 }

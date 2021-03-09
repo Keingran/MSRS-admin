@@ -3,6 +3,7 @@ package com.zjj.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zjj.common.Result;
 
 import java.util.List;
 
@@ -27,5 +28,16 @@ public class PageUtils {
         jsonObject.put("page", pageInfo.getPageNum());
         jsonObject.put("size", pageInfo.getPageSize());
         return jsonObject;
+    }
+
+
+    /**
+     * 响应返回结果
+     *
+     * @param rows 影响行数
+     * @return 操作结果
+     */
+    public static Result toResult(int rows, String msg) {
+        return rows > 0 ? Result.success(MessageUtils.message(msg)) : Result.error();
     }
 }

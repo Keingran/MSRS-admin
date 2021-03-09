@@ -7,6 +7,7 @@ import com.zjj.service.ISysDeptService;
 import com.zjj.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,6 +73,97 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     public SysDept getById(String id) {
         return deptMapper.getById(id);
+    }
+
+    /**
+     * 查询所有部门列表
+     */
+    @Override
+    public List<SysDept> selectDeptAll(SysDept dept) {
+        return deptMapper.selectDeptAll(dept);
+    }
+
+    /**
+     * 根据id查询所有部门信息
+     */
+    @Override
+    public SysDept selectDeptAllById(Long deptId) {
+        return deptMapper.selectDeptAllById(deptId);
+    }
+
+    /**
+     * 校验部门名称是否唯一
+     *
+     * @param dept 部门信息
+     * @return 结果
+     */
+    @Override
+    public String checkDeptNameUnique(SysDept dept) {
+        Long deptId = StringUtils.isNull(dept.getDeptId()) ? -1L : dept.getDeptId();
+        SysDept info = deptMapper.checkDeptNameUnique(dept.getDeptName(), dept.getParentId());
+        if (StringUtils.isNotNull(info) && info.getDeptId().longValue() != deptId.longValue()) {
+            return "1";
+        }
+        return "0";
+    }
+
+    /**
+     * 新增保存部门信息
+     *
+     * @param dept 部门信息
+     * @return 结果
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int insertDept(SysDept dept) {
+        return deptMapper.insertDept(dept);
+    }
+
+    /**
+     * 修改保存部门信息
+     *
+     * @param dept 部门信息
+     * @return 结果
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updateDept(SysDept dept) {
+        return deptMapper.updateDept(dept);
+    }
+
+    /**
+     * 是否存在子节点
+     *
+     * @param deptId 部门ID
+     * @return 结果
+     */
+    @Override
+    public boolean hasChildByDeptId(Long deptId) {
+        int result = deptMapper.hasChildByDeptId(deptId);
+        return result > 0 ? true : false;
+    }
+
+    /**
+     * 查询部门是否存在用户
+     *
+     * @param deptId 部门ID
+     * @return 结果 true 存在 false 不存在
+     */
+    @Override
+    public boolean checkDeptExistUser(Long deptId) {
+        int result = deptMapper.checkDeptExistUser(deptId);
+        return result > 0 ? true : false;
+    }
+
+    /**
+     * 删除部门管理信息
+     *
+     * @param deptId 部门ID
+     * @return 结果
+     */
+    @Override
+    public int deleteDeptById(Long deptId) {
+        return deptMapper.deleteDeptById(deptId);
     }
 
     /**

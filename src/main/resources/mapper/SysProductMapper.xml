@@ -22,7 +22,7 @@
         <result property="title" column="title"/>
         <result property="doctId" column="doct_id"/>
         <result property="doctName" column="name"/>
-        <result property="doctType" column="doct_type"/>
+        <result property="postName" column="post_name"/>
         <result property="doctSkill" column="content"/>
         <result property="fCode" column="fCode"/>
         <result property="nCode" column="nCode"/>
@@ -53,7 +53,7 @@
         select
         spi.uniqProductKey ,
         sd.name ,
-        sd.doct_type ,
+        sp.post_name ,
         spi.title ,
         sd.content ,
         spi.fcode ,
@@ -61,8 +61,10 @@
         from sys_product_info spi
         left join sys_doctor sd on spi.doct_id = sd.doct_id
         left join sys_product_batch spb on spi.batch_id = spb.batch_id
+        left join sys_position sp on sp.post_id = sd.doct_type
         <where>
-            spi.doct_id = sd.doct_id and spi.batch_id = spb.batch_id
+            spi.doct_id = sd.doct_id and spi.batch_id = spb.batch_id and sp.post_id = sd.doct_type
+            and sd.is_manage = 0
             <if test="deptId != null and deptId != ''">
                 AND spb.dept_id = #{deptId}
             </if>
@@ -75,12 +77,42 @@
         </where>
     </select>
 
+    <select id="getProductData" resultMap="SysProductInfoResult">
+        select
+        spi.uniqProductKey,
+        sd.name ,
+        sp.post_name ,
+        sdd.dept_name ,
+        spi.fcode ,
+        spi.ncode ,
+        spb.status ,
+        spb.batch_date
+        from sys_product_info spi
+        left join sys_doctor sd on spi.doct_id = sd.doct_id
+        left join sys_product_batch spb on spi.batch_id = spb.batch_id
+        left join sys_dept sdd on spb.dept_id = sdd.dept_id
+        left join sys_position sp on sp.post_id = sd.doct_type
+        <where>
+            spi.doct_id = sd.doct_id and spi.batch_id = spb.batch_id and sp.post_id = sd.doct_type
+            and sd.is_manage = 0
+            <if test="uniqProductKey != null and uniqProductKey != ''">
+                AND spi.uniqProductKey = #{uniqProductKey}
+            </if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                AND date_format(spb.batch_date,'%y%m%d') between date_format(#{params.beginTime},'%y%m%d') and date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="status != null and status != ''">
+                AND spb.status = #{status}
+            </if>
+        </where>
+    </select>
+
     <select id="productConfirm" resultMap="SysProductInfoResult">
         select
         spi.uniqProductKey ,
         spt.dept_name ,
         sd.name ,
-        sd.doct_type ,
+        sp.post_name ,
         spi.title ,
         sd.content ,
         spb.batch_date ,
@@ -91,8 +123,11 @@
         left join sys_doctor sd on spi.doct_id = sd.doct_id
         left join sys_product_batch spb on spi.batch_id = spb.batch_id
         left join sys_dept spt on spb.dept_id = spt.dept_id
+        left join sys_position sp on sp.post_id = sd.doct_type
         <where>
-            spi.doct_id = sd.doct_id and spi.batch_id = spb.batch_id and spb.dept_id = spt.dept_id
+            spi.doct_id = sd.doct_id and spi.batch_id = spb.batch_id
+            and spb.dept_id = spt.dept_id and sp.post_id = sd.doct_type
+            and sd.is_manage = 0
             <if test="deptId != null and deptId != ''">
                 AND spb.dept_id = #{deptId}
             </if>
@@ -104,4 +139,86 @@
             </if>
         </where>
     </select>
+
+    <select id="selectOrderNCodeById" parameterType="String" resultType="int">
+        select
+        ncode
+        from sys_product_info
+        <where>
+            uniqProductKey = #{uniqProductKey}
+        </where>
+    </select>
+
+    <select id="getVersionById" parameterType="String" resultType="int">
+        select
+        version
+        from sys_product_info
+        <where>
+            uniqProductKey = #{uniqProductKey}
+        </where>
+    </select>
+
+    <update id="updateProductNCode">
+        update sys_product_info
+        set
+        version = version + 1,
+        ncode = ncode - 1,
+        update_time = sysdate()
+        where
+        uniqProductKey = #{uniqProductKey}
+        and version = #{version}
+    </update>
+
+    <update id="updateProductNCodeAdd">
+        update sys_product_info
+        set
+        version = version + 1,
+        ncode = ncode + 1,
+        update_time = sysdate()
+        where
+        uniqProductKey = #{uniqProductKey}
+        and version = #{version}
+    </update>
+
+    <select id="checkProductDate" parameterType="String" resultType="SysProductBatch">
+        select
+        batch_id
+        from sys_product_batch
+        where batch_date = #{batchDate}
+    </select>
+
+    <insert id="insertProductBatch" parameterType="com.zjj.dto.SysProductInfo">
+        insert into sys_product_batch(
+        <if test="deptId != null and deptId != ''">dept_id,</if>
+        <if test="batchDate != null and batchDate != ''">batch_date,</if>
+        create_time
+        )values(
+        <if test="deptId != null and deptId != ''">#{deptId},</if>
+        <if test="batchDate != null and batchDate != ''">#{batchDate},</if>
+        sysdate()
+        )
+    </insert>
+
+    <insert id="insertProductInfo" parameterType="com.zjj.dto.SysProductInfo">
+        insert into sys_product_info(
+        <if test="uniqProductKey != null and uniqProductKey != ''">uniqProductKey,</if>
+        <if test="batchId != null and batchId != ''">batch_id,</if>
+        <if test="title != null and title != ''">title,</if>
+        <if test="doctId != null and doctId != ''">doct_id,</if>
+        <if test="fCode != null and fCode != ''">fcode,</if>
+        <if test="nCode != null and nCode != ''">ncode,</if>
+        <if test="status != null and status != ''">status,</if>
+        create_time
+        )values(
+        <if test="uniqProductKey != null and uniqProductKey != ''">#{uniqProductKey},</if>
+        <if test="batchId != null and batchId != ''">#{batchId},</if>
+        <if test="title != null and title != ''">#{title},</if>
+        <if test="doctId != null and doctId != ''">#{docdId},</if>
+        <if test="fCode != null and fCode != ''">#{fCode},</if>
+        <if test="nCode != null and nCode != ''">#{nCode},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        sysdate()
+        )
+    </insert>
+
 </mapper>

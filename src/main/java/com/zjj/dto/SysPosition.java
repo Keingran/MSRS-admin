@@ -1,55 +1,49 @@
 package com.zjj.dto;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
- * 部门表 sys_dept
+ * 岗位表 sys_position
  */
-public class SysDept implements Serializable {
+public class SysPosition implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 部门ID
+     * 岗位id
      */
-    private Long deptId;
+    private Long postId;
 
     /**
-     * 父部门ID
+     * 岗位名称
      */
-    private Long parentId;
+    private String postName;
 
     /**
-     * 部门名称
+     * 岗位等级
      */
-    private String deptName;
+    private String postRank;
 
     /**
-     * 负责人
+     * 岗位编码
      */
-    private String leader;
+    private String postCode;
 
     /**
-     * 联系电话
-     */
-    private String phone;
-
-    /**
-     * 部门状态:0正常,1停用
+     * 状态 0正常 1停用
      */
     private String status;
 
     /**
-     * 状态:0正常,1删除
+     * 状态 0正常 1删除
      */
     private String isDelete;
 
@@ -66,49 +60,40 @@ public class SysDept implements Serializable {
     private Date updateTime;
 
     /**
-     * 子部门
+     * 备注
      */
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<SysDept> children = new ArrayList<>();
+    private String remark;
 
-    public Long getDeptId() {
-        return deptId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
-    public Long getParentId() {
-        return parentId;
+    public String getPostName() {
+        return postName;
     }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
+    public void setPostName(String postName) {
+        this.postName = postName;
     }
 
-    public String getDeptName() {
-        return deptName;
+    public String getPostRank() {
+        return postRank;
     }
 
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
+    public void setPostRank(String postRank) {
+        this.postRank = postRank;
     }
 
-    public String getLeader() {
-        return leader;
+    public String getPostCode() {
+        return postCode;
     }
 
-    public void setLeader(String leader) {
-        this.leader = leader;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
     }
 
     public String getStatus() {
@@ -143,27 +128,26 @@ public class SysDept implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public List<SysDept> getChildren() {
-        return children;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setChildren(List<SysDept> children) {
-        this.children = children;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("deptId", getDeptId())
-                .append("parentId", getParentId())
-                .append("deptName", getDeptName())
-                .append("leader", getLeader())
-                .append("phone", getPhone())
+                .append("postId", getPostId())
+                .append("postName", getPostName())
+                .append("postRank", getPostRank())
+                .append("postCode", getPostCode())
                 .append("status", getStatus())
                 .append("isDelete", getIsDelete())
                 .append("createTime", getCreateTime())
                 .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
                 .toString();
     }
 }
-

@@ -42,4 +42,31 @@ public interface ISysProductService {
      * @return 号源信息
      */
     SysProductInfo productConfirm(String deptId, String batchDate, String uniqProductKey);
+
+    /**
+     * 修改号源数量 -1
+     * @param uniqProductKey 号源id
+     */
+    void updateProductNCode(String uniqProductKey);
+
+    /**
+     * 查询号源是否存在
+     * @param uniqProductKey 号源id
+     * @return 结果
+     */
+    int selectOrderNCodeById(String uniqProductKey);
+
+    /**
+     * 修改号源数量 +1
+     * @param uniqProductKey 号源id
+     */
+    void updateProductNCodeAdd(String uniqProductKey);
+
+    List<SysProductInfo> getProductData(SysProductInfo sysProductInfo);
+
+    int insertProductBatch(SysProductInfo sysProductInfo);
+
+    SysProductInfo checkProductDate(String batchDate);
+
+    void insertProductInfo(SysProductInfo sysProductInfo);
 }

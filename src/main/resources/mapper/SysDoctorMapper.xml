@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjj.mapper.SysDoctorMapper">
+
+    <resultMap type="SysDoctor" id="SysDoctorResult">
+        <id property="doctId" column="doct_id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="doctType" column="doct_type"/>
+        <result property="postName" column="post_name"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="sex" column="sex"/>
+        <result property="avatar" column="avatar"/>
+        <result property="status" column="status"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="content" column="content"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="getDoctorList" parameterType="com.zjj.dto.SysDoctor" resultMap="SysDoctorResult">
+        SELECT
+        d.doct_id,
+        d.name,
+        d.dept_id,
+        t.dept_name,
+        d.doct_type,
+        p.post_name,
+        d.email,
+        d.sex,
+        d.phone,
+        d.status,
+        d.create_time,
+        d.content,
+        d.remark
+        from sys_doctor d
+        left join sys_dept t on d.dept_id = t.dept_id
+        left join sys_position p on d.doct_type = p.post_id
+        <where>
+            d.is_delete = '0' and d.is_manage = 0
+            <if test="deptId != null and deptId != ''">
+                and d.dept_id = #{deptId}
+            </if>
+            <if test="name != null and name != ''">
+                AND d.name like concat('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND d.status = #{status}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND d.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                AND date_format(d.create_time,'%y%m%d') between date_format(#{params.beginTime},'%y%m%d') and date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDoctorById" parameterType="String" resultMap="SysDoctorResult">
+        SELECT
+        d.doct_id,
+        d.name,
+        d.dept_id,
+        t.dept_name,
+        d.doct_type,
+        p.post_name,
+        d.email,
+        d.sex,
+        d.phone,
+        d.status,
+        d.create_time,
+        d.content,
+        d.remark
+        from sys_doctor d
+        left join sys_dept t on d.dept_id = t.dept_id
+        left join sys_position p on d.doct_type = p.post_id
+        where d.is_delete = '0' and d.is_manage = 0
+        and d.doct_id = #{doctId}
+    </select>
+
+    <select id="selectPasswordById" parameterType="String" resultMap="SysDoctorResult">
+        select
+        *
+        from sys_doctor
+        where is_delete = '0'
+        and doct_id = #{doctId}
+    </select>
+
+    <select id="checkDoctIdUnique" parameterType="String" resultType="int">
+        select count(1)
+        from sys_doctor
+        where is_delete = '0' and is_manage = 0
+        and doct_id = #{doctId}
+        limit 1
+    </select>
+
+    <select id="checkPhoneUnique" parameterType="String" resultMap="SysDoctorResult">
+        SELECT
+        d.doct_id,
+        d.name,
+        d.dept_id,
+        d.doct_type,
+        d.email,
+        d.sex,
+        d.phone,
+        d.status,
+        d.create_time,
+        d.content,
+        d.remark
+        from sys_doctor d
+        where d.is_delete = '0' and d.is_manage = 0
+        and d.phone = #{phone}
+        limit 1
+    </select>
+
+    <select id="checkEmailUnique" parameterType="String" resultMap="SysDoctorResult">
+        SELECT
+        d.doct_id,
+        d.name,
+        d.dept_id,
+        d.doct_type,
+        d.email,
+        d.sex,
+        d.phone,
+        d.status,
+        d.create_time,
+        d.content,
+        d.remark
+        from sys_doctor d
+        where d.is_delete = '0' and d.is_manage = 0
+        and d.email = #{email}
+        limit 1
+    </select>
+
+    <insert id="insertDoctor" parameterType="SysDoctor">
+        insert into sys_doctor(
+        <if test="doctId != null and doctId != ''">doct_id,</if>
+        <if test="name != null and name != ''">name,</if>
+        <if test="password != null and password != ''">password,</if>
+        <if test="deptId != null and deptId != ''">dept_id,</if>
+        <if test="doctType != null and doctType != ''">doct_type,</if>
+        <if test="email != null and email != ''">email,</if>
+        <if test="sex != null and sex != ''">sex,</if>
+        <if test="phone != null and phone != ''">phone,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="content != null and content != ''">content,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        create_time
+        )values(
+        <if test="doctId != null and doctId != ''">#{doctId},</if>
+        <if test="name != null and name != ''">#{name},</if>
+        <if test="password != null and password != ''">#{password},</if>
+        <if test="deptId != null and deptId != ''">#{deptId},</if>
+        <if test="doctType != null and doctType != ''">#{doctType},</if>
+        <if test="email != null and email != ''">#{email},</if>
+        <if test="sex != null and sex != ''">#{sex},</if>
+        <if test="phone != null and phone != ''">#{phone},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="content != null and content != ''">#{content},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="updateDoctor" parameterType="SysDoctor">
+        update sys_doctor
+        <set>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+            <if test="doctType != null and doctType != ''">doct_type = #{doctType},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </set>
+        where doct_id = #{doctId} and is_delete = '0' and is_manage = 0
+    </update>
+
+    <update id="deleteDoctorById" parameterType="String">
+        update sys_doctor
+        set
+        is_delete = '1',
+        update_time = sysdate()
+        where doct_id = #{doctId}
+    </update>
+
+    <update id="deleteDoctorByIds" parameterType="String">
+        update sys_doctor set is_delete = '1' where doct_id in
+        <foreach collection="array" item="doctId" open="(" separator="," close=")">
+            #{doctId}
+        </foreach>
+    </update>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjj.mapper.SysOrderMapper">
+
+    <resultMap type="SysOrder" id="SysOrderResult">
+        <id property="orderId" column="order_id"/>
+        <result property="uniqProductKey" column="uniqProductKey"/>
+        <result property="doctId" column="doct_id"/>
+        <result property="name" column="name"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="patientId" column="patient_id"/>
+        <result property="patientName" column="patient_name"/>
+        <result property="cardNo" column="cardNo"/>
+        <result property="cardType" column="cardType"/>
+        <result property="fCode" column="fcode"/>
+        <result property="batchDate" column="batch_date"/>
+        <result property="productDate" column="product_date"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+    <insert id="saveOrder" parameterType="com.zjj.dto.SysOrder">
+        insert into sys_order(
+        <if test="orderId != null and orderId != ''">order_id,</if>
+        <if test="uniqProductKey != null and uniqProductKey != ''">uniqProductKey,</if>
+        <if test="deptId != null and deptId != ''">dept_id,</if>
+        <if test="patientId != null and patientId != ''">patient_id,</if>
+        <if test="cardNo != null and cardNo != ''">cardNo,</if>
+        <if test="cardType != null and cardType != ''">cardType,</if>
+        <if test="fCode != null and fCode != ''">fcode,</if>
+        <if test="batchDate != null and batchDate != ''">batch_date,</if>
+        <if test="productDate != null and productDate != ''">product_date,</if>
+        create_time
+        )values(
+        <if test="orderId != null and orderId != ''">#{orderId},</if>
+        <if test="uniqProductKey != null and uniqProductKey != ''">#{uniqProductKey},</if>
+        <if test="deptId != null and deptId != ''">#{deptId},</if>
+        <if test="patientId != null and patientId != ''">#{patientId},</if>
+        <if test="cardNo != null and cardNo != ''">#{cardNo},</if>
+        <if test="cardType != null and cardType != ''">#{cardType},</if>
+        <if test="fCode != null and fCode != ''">#{fCode},</if>
+        <if test="batchDate != null and batchDate != ''">#{batchDate},</if>
+        <if test="productDate != null and productDate != ''">#{productDate},</if>
+        sysdate()
+        )
+    </insert>
+
+    <select id="getOrderList" parameterType="com.zjj.dto.SysOrder" resultMap="SysOrderResult">
+        select
+        so.order_id,
+        so.batch_date,
+        so.product_date,
+        sdt.dept_name,
+        so.uniqProductKey,
+        sd.name,
+        so.fcode,
+        sp.patient_id,
+        sp.patient_name,
+        so.order_status
+        from sys_order so
+        left join sys_product_info spi on spi.uniqProductKey = so.uniqProductKey
+        left join sys_doctor sd on sd.doct_id = spi.doct_id
+        left join sys_dept sdt on sdt.dept_id = so.dept_id
+        left join sys_patient sp on sp.patient_id = so.patient_id
+        <where>
+            sd.is_manage = 0
+            <if test="orderId != null and orderId != ''">
+                AND so.order_id = #{orderId}
+            </if>
+            <if test="cardNo != null and cardNo != ''">
+                AND so.cardNo = #{cardNo}
+            </if>
+            <if test="orderStatus != null and orderStatus != ''">
+                AND so.order_status = #{orderStatus}
+            </if>
+            <if test="doctId != null and doctId != ''">
+                AND sd.doct_id = #{doctId}
+            </if>
+            <if test="patientName != null and patientName != ''">
+                AND sp.patient_name like concat('%', #{patientName}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != '' and params.endTime != null and params.endTime != ''">
+                AND date_format(so.batch_date,'%y%m%d') between date_format(#{params.beginTime},'%y%m%d') and date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateOrderStatus" parameterType="com.zjj.dto.SysOrder">
+        update sys_order
+        set
+            order_status = #{orderStatus},
+            update_time = sysdate()
+        where order_id = #{orderId}
+    </update>
+
+</mapper>

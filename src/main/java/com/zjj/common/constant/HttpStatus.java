@@ -5,8 +5,7 @@ package com.zjj.common.constant;
  *
  * @author zjj
  */
-public class HttpStatus
-{
+public class HttpStatus {
     /**
      * 操作成功
      */
@@ -93,9 +92,24 @@ public class HttpStatus
     public static final int SMS_ERROR = 10000;
 
     /**
+     * 就诊人已存在错误
+     */
+    public static final int PATIENT_ALREADY = 10000;
+
+    /**
      * 用户登录状态停用
      */
     public static final int LOGIN_STATUS = 10001;
+
+    /**
+     * 用户登录状态停用
+     */
+    public static final int AUTH_ERROR = 10000;
+
+    /**
+     * 挂号错误
+     */
+    public static final int ORDER_ERROR = 10000;
 
 
 }

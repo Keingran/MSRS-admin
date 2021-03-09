@@ -128,7 +128,23 @@ public class TokenService {
         String userKey = getTokenKey(loginUser.getToken());
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
- 
+
+    /**
+     * 刷新用户认证状态
+     *
+     * @param loginUser 登录信息
+     */
+    public void refreshTokenAndAuth(LoginUser loginUser,SysUser user) {
+        loginUser.setLoginTime(System.currentTimeMillis());
+        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
+        loginUser.setUser(user);
+        // 根据uuid将loginUser缓存
+        String userKey = getTokenKey(loginUser.getToken());
+        System.out.println("userKey" + userKey);
+        System.out.println("getToken" + loginUser.getToken());
+        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+    }
+
     /**
      * 设置用户代理信息
      *

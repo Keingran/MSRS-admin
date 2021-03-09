@@ -19,7 +19,55 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <resultMap type="SysPatientCard" id="SysPatientCardListResult">
+        <id property="cardNo" column="cardNo"/>
+        <result property="cardType" column="cardType"/>
+        <result property="cardTypeView" column="cardTypeView"/>
+        <result property="medicareType" column="medicareType"/>
+        <result property="medicareTypeView" column="medicareTypeView"/>
+        <result property="patientId" column="patient_id"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
     <select id="getPatientList" parameterType="Long" resultMap="SysPatientListResult">
+        select
+        sp.patient_id,
+        sp.patient_name,
+        sp.phone,
+        sp.idCardNo,
+        sp.idCardType,
+        sp.idCardTypeView,
+        sp.sex,
+        sp.birthDate,
+        sp.address
+        from sys_patient sp
+        <where>
+            sp.is_delete = '0'
+            <if test="userId != null and userId != ''">
+                AND sp.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getPatientCardList" parameterType="Long" resultMap="SysPatientCardListResult">
+        select
+        spc.cardNo ,
+        spc.cardType ,
+        spc.cardTypeView,
+        spc.medicareType,
+        spc.medicareTypeView
+        from sys_patient_card spc
+        <where>
+            spc.is_delete = '0'
+            <if test="patientId != null and patientId != ''">
+                AND spc.patient_id = #{patientId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getPatientDetail" resultMap="SysPatientListResult">
         select
         patient_id,
         patient_name,
@@ -36,6 +84,149 @@
             <if test="userId != null and userId != ''">
                 AND user_id = #{userId}
             </if>
+            <if test="idCardNo != null and idCardNo != ''">
+                AND idCardNo = #{idCardNo}
+            </if>
+            <if test="idCardType != null and idCardType != ''">
+                AND idCardType = #{idCardType}
+            </if>
         </where>
     </select>
+
+    <select id="getPatientData" parameterType="Long" resultMap="SysPatientListResult">
+        select
+        patient_id,
+        patient_name,
+        phone,
+        idCardNo,
+        idCardType,
+        idCardTypeView,
+        sex,
+        birthDate,
+        address
+        from sys_patient
+        <where>
+            is_delete = '0'
+            <if test="patientId != null and patientId != ''">
+                AND patient_id = #{patientId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertPatient" parameterType="com.zjj.dto.SysPatient">
+        insert into sys_patient
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            patient_name,
+            phone,
+            idCardNo,
+            idCardType,
+            idCardTypeView,
+            sex,
+            birthDate,
+            address,
+            user_id,
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{patientName},
+            #{phone},
+            #{idCardNo},
+            #{idCardType},
+            #{idCardTypeView},
+            #{sex},
+            #{birthDate},
+            #{address},
+            #{userId},
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="changePatient" parameterType="com.zjj.dto.SysPatient">
+        update sys_patient
+        set
+        phone = #{phone},
+        address = #{address},
+        update_time = sysdate()
+    </update>
+
+    <update id="unBindPatient" parameterType="com.zjj.dto.SysPatient">
+        update sys_patient
+        set
+        is_delete = '1',
+        update_time = sysdate()
+        <where>
+            <if test="patientId != null and patientId != ''">
+                AND patient_id = #{patientId}
+            </if>
+            <if test="idCardNo != null and idCardNo != ''">
+                AND idCardNo = #{idCardNo}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+        </where>
+    </update>
+
+    <select id="bindCheck" resultMap="SysPatientListResult">
+        select
+        patient_id,
+        patient_name,
+        phone,
+        idCardNo,
+        idCardType,
+        idCardTypeView,
+        sex,
+        birthDate,
+        address
+        from sys_patient
+        <where>
+            is_delete = '0'
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+            <if test="idCardNo != null and idCardNo != ''">
+                AND idCardNo = #{idCardNo}
+            </if>
+            <if test="idCardType != null and idCardType != ''">
+                AND idCardType = #{idCardType}
+            </if>
+        </where>
+    </select>
+
+    <update id="unbindPatientCard" parameterType="com.zjj.dto.SysPatientCard">
+        update sys_patient_card
+        set
+        is_delete = '1',
+        update_time = sysdate()
+        <where>
+            <if test="cardNo != null and cardNo != ''">
+                AND cardNo = #{cardNo}
+            </if>
+            <if test="cardType != null and cardType != ''">
+                AND cardType = #{cardType}
+            </if>
+        </where>
+    </update>
+
+    <insert id="bindPatientCard" parameterType="com.zjj.dto.SysPatientCard">
+        insert into sys_patient_card
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            cardNo,
+            cardType,
+            cardTypeView,
+            medicareType,
+            medicareTypeView,
+            patient_id,
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{cardNo},
+            #{cardType},
+            #{cardTypeView},
+            #{medicareType},
+            #{medicareTypeView},
+            #{patientId},
+            sysdate()
+        </trim>
+    </insert>
 </mapper>

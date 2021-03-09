@@ -60,4 +60,72 @@ public class SysProductServiceImpl implements ISysProductService {
     public SysProductInfo productConfirm(String deptId, String batchDate, String uniqProductKey) {
         return productMapper.productConfirm(deptId, batchDate, uniqProductKey);
     }
+
+
+    /**
+     * 修改号源数量 -1
+     * 参考CAS的无锁算法来处理更新的并发问题（利用死循环+版本号）
+     *
+     * @param uniqProductKey 号源id
+     */
+    @Override
+    public void updateProductNCode(String uniqProductKey) {
+        // 参考cas
+        for (; ; ) {
+            Integer version = productMapper.getVersionById(uniqProductKey);
+            Integer updateCount = productMapper.updateProductNCode(uniqProductKey, version);
+            if (updateCount != null && updateCount.equals(1)) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * 查询号源是否存在
+     *
+     * @param uniqProductKey 号源id
+     * @return 结果
+     */
+    @Override
+    public int selectOrderNCodeById(String uniqProductKey) {
+        return productMapper.selectOrderNCodeById(uniqProductKey);
+    }
+
+    /**
+     * 修改号源数量 +1
+     * 参考CAS的无锁算法来处理更新的并发问题（利用死循环+版本号）
+     *
+     * @param uniqProductKey 号源id
+     */
+    @Override
+    public void updateProductNCodeAdd(String uniqProductKey) {
+        // 参考cas
+        for (; ; ) {
+            Integer version = productMapper.getVersionById(uniqProductKey);
+            Integer updateCount = productMapper.updateProductNCodeAdd(uniqProductKey, version);
+            if (updateCount != null && updateCount.equals(1)) {
+                break;
+            }
+        }
+    }
+
+    @Override
+    public List<SysProductInfo> getProductData(SysProductInfo sysProductInfo) {
+        return productMapper.getProductData(sysProductInfo);
+    }
+
+    @Override
+    public int insertProductBatch(SysProductInfo sysProductInfo) {
+        return productMapper.insertProductBatch(sysProductInfo);
+    }
+
+    @Override
+    public SysProductInfo checkProductDate(String batchDate) {
+        return productMapper.checkProductDate(batchDate);
+    }
+
+    @Override
+    public void insertProductInfo(SysProductInfo sysProductInfo) {
+        productMapper.insertProductInfo(sysProductInfo);
+    }
 }

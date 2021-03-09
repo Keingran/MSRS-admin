@@ -4,12 +4,14 @@ package com.zjj.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.zjj.common.Result;
+import com.zjj.dto.SysDoctor;
 import com.zjj.dto.SysProductBatch;
 import com.zjj.dto.SysProductInfo;
 import com.zjj.service.ISysProductService;
 import com.zjj.utils.DateUtils;
 import com.zjj.utils.PageUtils;
 import com.zjj.utils.StringUtils;
+import com.zjj.utils.UUID.IdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +88,38 @@ public class SysProductController {
         jsonObject.put("AFTERNOON", pmProductDetail);
         return Result.success(jsonObject);
     }
+
+    @PostMapping("/getProductData")
+    public Result getProductData(@RequestBody SysProductInfo sysProductInfo) {
+        int page = StringUtils.isNotNull(sysProductInfo.getPage()) ? sysProductInfo.getPage() : 1;
+        int size = StringUtils.isNotNull(sysProductInfo.getSize()) ? sysProductInfo.getSize() : 10;
+
+        List<SysProductInfo> productInfos = productService.getProductData(sysProductInfo);
+
+        // 分页处理
+        JSONObject pageResult = PageUtils.getPageResult(productInfos, page, size);
+        return Result.success(pageResult);
+    }
+
+    @PostMapping("/insertProduct")
+    public Result insertProduct(@RequestBody SysProductInfo sysProductInfo){
+        String uuid = IdUtils.simpleUUID();
+        sysProductInfo.setUniqProductKey(uuid);
+        SysProductInfo s = productService.checkProductDate(sysProductInfo.getBatchDate());
+        // 大于0说明有batch
+        if( StringUtils.isNotNull(s)){
+            sysProductInfo.setBatchId(s.getBatchId());
+            productService.insertProductInfo(sysProductInfo);
+            return Result.success();
+        }else {
+            productService.insertProductBatch(sysProductInfo);
+            SysProductInfo sp = productService.checkProductDate(sysProductInfo.getBatchDate());
+            sysProductInfo.setBatchId(sp.getBatchId());
+            productService.insertProductInfo(sysProductInfo);
+        }
+        return Result.success();
+    }
+
 
     /**
      * 确认号源信息

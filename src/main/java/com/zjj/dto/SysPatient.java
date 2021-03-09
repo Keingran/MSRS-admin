@@ -1,14 +1,17 @@
 package com.zjj.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 就诊人表 sys_patient
  */
-public class SysPatient {
+public class SysPatient implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -67,13 +70,20 @@ public class SysPatient {
     private String isDelete;
 
     /**
+     * 就诊卡信息
+     */
+    private List<SysPatientCard> cardList;
+
+    /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 
     public Long getPatientId() {
@@ -164,6 +174,14 @@ public class SysPatient {
         this.isDelete = isDelete;
     }
 
+    public List<SysPatientCard> getCardList() {
+        return cardList;
+    }
+
+    public void setCardList(List<SysPatientCard> cardList) {
+        this.cardList = cardList;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -194,6 +212,7 @@ public class SysPatient {
                 .append("address", getAddress())
                 .append("userId", getUserId())
                 .append("isDelete", getIsDelete())
+                .append("cardList", getCardList())
                 .append("createTime", getCreateTime())
                 .append("updateTime", getUpdateTime())
                 .toString();
