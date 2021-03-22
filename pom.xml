@@ -44,6 +44,12 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+        <!--RabbitMq-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
         <!-- Mysql驱动 -->
         <dependency>
             <groupId>mysql</groupId>

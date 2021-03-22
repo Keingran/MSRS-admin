@@ -13,6 +13,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  * 时间工具类
  */
 public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
+    private String a = "A";
     public static String YYYY = "yyyy";
 
     public static String YYYY_MM = "yyyy-MM";

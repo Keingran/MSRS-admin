@@ -1,8 +1,10 @@
 package com.zjj.controller;
 
 import com.zjj.common.Result;
+import com.zjj.common.annotation.RequestRateLimit;
 import com.zjj.common.constant.Constants;
 import com.zjj.common.constant.HttpStatus;
+import com.zjj.common.enums.RateLimitEnum;
 import com.zjj.redis.RedisCache;
 import com.zjj.service.SendSms;
 import com.zjj.utils.MessageUtils;
@@ -37,6 +39,7 @@ public class SmsController {
      * @param smsType 短信类型
      * @return 发送结果
      */
+    @RequestRateLimit(limit = RateLimitEnum.RRLimit_1_60)
     @GetMapping("/smsCode")
     public Result getSmsCode(@RequestParam("phone") String phone, @RequestParam("smsType") String smsType) {
         // Redis手机号短信验证码标识
